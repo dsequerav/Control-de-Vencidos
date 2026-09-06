@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/modernist-3ed3b630-dcfb-42c7-af4b-6bf2e2836408/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); }
+  a { color: var(--color-accent-700); }
+  a:hover { color: var(--color-accent); }
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:var(--color-bg);font-family:var(--font-body);color:var(--color-text)">
+
+  <header style="border-bottom:2px solid var(--color-text);background:var(--color-bg);position:sticky;top:0;z-index:5">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-6);padding:var(--space-4) var(--space-6)">
+      <div style="font-family:var(--font-heading);font-weight:800;font-size:16px;letter-spacing:0.14em;text-transform:uppercase">Farmatodo · Consola de tienda</div>
+      <div style="display:flex;align-items:center;gap:var(--space-2);font-size:13px;color:var(--color-neutral-700)">
+        <span style="width:8px;height:8px;background:var(--color-accent);display:block"></span>
+        <span>{{ tienda }}</span>
+      </div>
+      <div style="flex:1"></div>
+      <div style="font-size:13px;color:var(--color-neutral-700)">Turno abierto · 07:00 — 15:00</div>
+      <div style="display:flex;align-items:center;gap:var(--space-2);font-size:13px;font-weight:600">
+        <span style="width:28px;height:28px;background:var(--color-text);color:var(--color-bg);display:grid;place-items:center;font-size:11px">MR</span>
+        <span>M. Rodríguez</span>
+      </div>
+    </div>
+    <nav style="display:flex;gap:0;border-top:1px solid var(--color-neutral-300);padding:0 var(--space-6)">
+      <sc-for list="{{ tabs }}" as="tab" hint-placeholder-count="3">
+        <button type="button" onClick="{{ tab.go }}" style="{{ tab.style }}">{{ tab.label }}</button>
+      </sc-for>
+    </nav>
+  </header>
+
+  <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+  <main style="padding:var(--space-8) var(--space-6);max-width:1440px">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--space-6);margin-bottom:var(--space-6)">
+      <div>
+        <div style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:var(--space-2)">Lunes 7 de septiembre</div>
+        <h1 style="font-family:var(--font-heading);font-weight:800;font-size:42px;line-height:1.05;margin:0;letter-spacing:-0.02em">El turno de hoy</h1>
+      </div>
+      <div style="flex:1"></div>
+      <button type="button" class="btn btn-primary" onClick="{{ goWizard }}">Crear reposición</button>
+    </div>
+
+    <div style="border-top:2px solid var(--color-text);border-bottom:2px solid var(--color-text);display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+      <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+        <div style="padding:var(--space-6);border-left:1px solid var(--color-neutral-300)">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-700)">{{ k.label }}</div>
+          <div style="font-family:var(--font-heading);font-weight:800;font-size:38px;line-height:1.1;margin-top:var(--space-3);letter-spacing:-0.02em">{{ k.value }}</div>
+          <div style="font-size:13px;margin-top:var(--space-2);color:var(--color-neutral-700)">{{ k.note }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:var(--space-8);margin-top:var(--space-8);align-items:start">
+      <section style="min-width:0">
+        <div style="display:flex;align-items:baseline;gap:var(--space-4);border-bottom:2px solid var(--color-text);padding-bottom:var(--space-3)">
+          <h2 style="font-family:var(--font-heading);font-weight:800;font-size:20px;margin:0;letter-spacing:-0.01em">Quiebres que exigen acción</h2>
+          <span style="font-size:13px;color:var(--color-neutral-700)">7 SKU</span>
+        </div>
+        <sc-for list="{{ quiebres }}" as="q" hint-placeholder-count="5">
+          <button type="button" onClick="{{ q.open }}" style="display:grid;grid-template-columns:1fr auto;gap:var(--space-4);width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--color-neutral-300);padding:var(--space-4) var(--space-2);cursor:pointer;font-family:var(--font-body);color:var(--color-text)" style-hover="background:var(--color-accent-100)">
+            <div style="min-width:0">
+              <div style="font-weight:600;font-size:15px">{{ q.nombre }}</div>
+              <div style="font-size:13px;color:var(--color-neutral-700);margin-top:2px">{{ q.meta }}</div>
+            </div>
+            <div style="text-align:right;white-space:nowrap">
+              <div style="font-family:var(--font-heading);font-weight:800;font-size:18px;color:{{ q.color }}">{{ q.dias }}</div>
+              <div style="font-size:12px;color:var(--color-neutral-700);letter-spacing:0.08em;text-transform:uppercase">cobertura</div>
+            </div>
+          </button>
+        </sc-for>
+      </section>
+
+      <section style="min-width:0">
+        <sc-if value="{{ mostrarAlertas }}" hint-placeholder-val="{{ true }}">
+        <div style="background:var(--color-accent);color:#fff;padding:var(--space-6);margin-bottom:var(--space-6)">
+          <div style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;opacity:0.9">Requiere tu firma</div>
+          <div style="font-family:var(--font-heading);font-weight:800;font-size:26px;line-height:1.15;margin-top:var(--space-3)">2 devoluciones de controlados vencen hoy a las 14:00</div>
+          <button type="button" style="margin-top:var(--space-4);background:#fff;color:var(--color-accent-700);border:0;padding:10px var(--space-4);font-family:var(--font-body);font-weight:600;font-size:14px;cursor:pointer" style-hover="background:var(--color-accent-100)">Revisar devoluciones</button>
+        </div>
+        </sc-if>
+
+        <div style="display:flex;align-items:baseline;gap:var(--space-4);border-bottom:2px solid var(--color-text);padding-bottom:var(--space-3)">
+          <h2 style="font-family:var(--font-heading);font-weight:800;font-size:20px;margin:0;letter-spacing:-0.01em">Pendientes del turno</h2>
+          <span style="font-size:13px;color:var(--color-neutral-700)">{{ pendientesTexto }}</span>
+        </div>
+        <sc-for list="{{ tareas }}" as="t" hint-placeholder-count="5">
+          <label style="display:grid;grid-template-columns:auto 1fr auto;gap:var(--space-4);align-items:center;border-bottom:1px solid var(--color-neutral-300);padding:var(--space-4) var(--space-2);cursor:pointer" style-hover="background:var(--color-neutral-200)">
+            <input type="checkbox" checked="{{ t.hecha }}" onChange="{{ t.toggle }}" style="width:18px;height:18px;accent-color:var(--color-accent)">
+            <span style="font-size:15px;text-decoration:{{ t.deco }};color:{{ t.colorTexto }}">{{ t.texto }}</span>
+            <span style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-neutral-700)">{{ t.hora }}</span>
+          </label>
+        </sc-for>
+      </section>
+    </div>
+  </main>
+  </sc-if>
+
+  <sc-if value="{{ isDetalle }}" hint-placeholder-val="{{ false }}">
+  <main style="padding:var(--space-8) var(--space-6);max-width:1200px">
+    <button type="button" onClick="{{ goDashboard }}" style="background:transparent;border:0;padding:0;font-family:var(--font-body);font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-accent-700);cursor:pointer;margin-bottom:var(--space-4)">← Volver al turno</button>
+
+    <div style="display:flex;flex-wrap:wrap;gap:var(--space-6);align-items:flex-start;border-bottom:2px solid var(--color-text);padding-bottom:var(--space-6)">
+      <div style="min-width:0;flex:1">
+        <div style="display:flex;gap:var(--space-2);margin-bottom:var(--space-3)">
+          <span class="tag tag-accent">Quiebre en 2 días</span>
+          <span class="tag tag-outline">Alta rotación</span>
+        </div>
+        <h1 style="font-family:var(--font-heading);font-weight:800;font-size:38px;line-height:1.05;margin:0;letter-spacing:-0.02em">Acetaminofén 500 mg · 20 tabletas</h1>
+        <div style="font-size:14px;color:var(--color-neutral-700);margin-top:var(--space-3)">SKU 4410287 · Analgésicos · Proveedor Genven · Pasillo 3, góndola B</div>
+      </div>
+      <div style="display:flex;gap:var(--space-2)">
+        <button type="button" class="btn btn-secondary">Ajustar inventario</button>
+        <button type="button" class="btn btn-primary" onClick="{{ goWizard }}">Crear reposición</button>
+      </div>
+    </div>
+
+    <div style="border-bottom:2px solid var(--color-text);display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+      <sc-for list="{{ detalleKpis }}" as="d" hint-placeholder-count="4">
+        <div style="padding:var(--space-6);border-left:1px solid var(--color-neutral-300)">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-700)">{{ d.label }}</div>
+          <div style="font-family:var(--font-heading);font-weight:800;font-size:34px;margin-top:var(--space-3);letter-spacing:-0.02em;color:{{ d.color }}">{{ d.value }}</div>
+          <div style="font-size:13px;color:var(--color-neutral-700);margin-top:var(--space-2)">{{ d.note }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:var(--space-8);margin-top:var(--space-8);align-items:start">
+      <section style="min-width:0">
+        <h2 style="font-family:var(--font-heading);font-weight:800;font-size:20px;margin:0 0 var(--space-3);letter-spacing:-0.01em">Venta de los últimos 7 días</h2>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:var(--space-2);align-items:end;height:180px;border-bottom:2px solid var(--color-text);padding-bottom:0">
+          <sc-for list="{{ barras }}" as="b" hint-placeholder-count="7">
+            <div style="display:flex;flex-direction:column;justify-content:flex-end;height:100%;gap:var(--space-2)">
+              <div style="font-size:12px;font-weight:600;text-align:center">{{ b.valor }}</div>
+              <div style="background:{{ b.color }};height:{{ b.alto }}"></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:var(--space-2);margin-top:var(--space-2)">
+          <sc-for list="{{ barras }}" as="b" hint-placeholder-count="7">
+            <div style="font-size:11px;text-align:center;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-neutral-700)">{{ b.dia }}</div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="min-width:0">
+        <h2 style="font-family:var(--font-heading);font-weight:800;font-size:20px;margin:0 0 var(--space-3);letter-spacing:-0.01em">Existencias en la red</h2>
+        <table class="table" style="width:100%">
+          <thead>
+            <tr><th style="text-align:left">Ubicación</th><th style="text-align:right">Unidades</th><th style="text-align:right">Traslado</th></tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ red }}" as="r" hint-placeholder-count="4">
+              <tr>
+                <td>{{ r.lugar }}</td>
+                <td style="text-align:right;font-weight:600">{{ r.uds }}</td>
+                <td style="text-align:right;color:var(--color-neutral-700)">{{ r.eta }}</td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+  </sc-if>
+
+  <sc-if value="{{ isWizard }}" hint-placeholder-val="{{ false }}">
+  <main style="padding:var(--space-8) var(--space-6);max-width:1000px">
+    <button type="button" onClick="{{ goDashboard }}" style="background:transparent;border:0;padding:0;font-family:var(--font-body);font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:var(--color-accent-700);cursor:pointer;margin-bottom:var(--space-4)">← Cancelar</button>
+    <h1 style="font-family:var(--font-heading);font-weight:800;font-size:38px;line-height:1.05;margin:0 0 var(--space-6);letter-spacing:-0.02em">Nueva orden de reposición</h1>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid var(--color-text);border-bottom:2px solid var(--color-text)">
+      <sc-for list="{{ pasos }}" as="p" hint-placeholder-count="3">
+        <div style="padding:var(--space-4) var(--space-6);border-left:1px solid var(--color-neutral-300);background:{{ p.fondo }};color:{{ p.tinta }}">
+          <div style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;opacity:0.75">Paso {{ p.n }}</div>
+          <div style="font-family:var(--font-heading);font-weight:800;font-size:17px;margin-top:var(--space-1)">{{ p.titulo }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ paso1 }}" hint-placeholder-val="{{ true }}">
+    <section style="padding:var(--space-8) 0">
+      <div class="field" style="max-width:420px;margin-bottom:var(--space-6)">
+        <label for="buscar">Buscar producto o escanear código</label>
+        <input id="buscar" class="input" type="text" placeholder="SKU, nombre o EAN">
+      </div>
+      <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-700);margin-bottom:var(--space-2)">Sugeridos por cobertura baja</div>
+      <sc-for list="{{ sugeridos }}" as="s" hint-placeholder-count="4">
+        <label style="display:grid;grid-template-columns:auto 1fr auto;gap:var(--space-4);align-items:center;border-bottom:1px solid var(--color-neutral-300);padding:var(--space-4) var(--space-2);cursor:pointer" style-hover="background:var(--color-neutral-200)">
+          <input type="checkbox" checked="{{ s.sel }}" onChange="{{ s.toggle }}" style="width:18px;height:18px;accent-color:var(--color-accent)">
+          <span>
+            <span style="font-weight:600;font-size:15px;display:block">{{ s.nombre }}</span>
+            <span style="font-size:13px;color:var(--color-neutral-700)">{{ s.meta }}</span>
+          </span>
+          <span style="font-size:13px;color:var(--color-neutral-700);white-space:nowrap">{{ s.sugerido }}</span>
+        </label>
+      </sc-for>
+    </section>
+    </sc-if>
+
+    <sc-if value="{{ paso2 }}" hint-placeholder-val="{{ false }}">
+    <section style="padding:var(--space-8) 0">
+      <table class="table" style="width:100%;margin-bottom:var(--space-6)">
+        <thead>
+          <tr><th style="text-align:left">Producto</th><th style="text-align:right">Cantidad</th><th style="text-align:left">Origen</th></tr>
+        </thead>
+        <tbody>
+          <sc-for list="{{ seleccionados }}" as="s" hint-placeholder-count="3">
+            <tr>
+              <td>{{ s.nombre }}</td>
+              <td style="text-align:right">
+                <div style="display:inline-flex;align-items:center;gap:var(--space-2)">
+                  <button type="button" onClick="{{ s.menos }}" style="width:32px;height:32px;border:1px solid var(--color-text);background:transparent;font-size:16px;cursor:pointer;font-family:var(--font-body)" style-hover="background:var(--color-accent-100)">−</button>
+                  <span style="min-width:44px;text-align:center;font-weight:600">{{ s.cant }}</span>
+                  <button type="button" onClick="{{ s.mas }}" style="width:32px;height:32px;border:1px solid var(--color-text);background:transparent;font-size:16px;cursor:pointer;font-family:var(--font-body)" style-hover="background:var(--color-accent-100)">+</button>
+                </div>
+              </td>
+              <td>{{ s.origen }}</td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+      <div class="field" style="max-width:420px">
+        <label for="fecha">Fecha de recepción deseada</label>
+        <input id="fecha" class="input" type="text" value="Martes 8 de septiembre — reparto AM">
+      </div>
+    </section>
+    </sc-if>
+
+    <sc-if value="{{ paso3 }}" hint-placeholder-val="{{ false }}">
+    <section style="padding:var(--space-8) 0">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));border-top:2px solid var(--color-text);border-bottom:2px solid var(--color-text);margin-bottom:var(--space-6)">
+        <div style="padding:var(--space-6);border-left:1px solid var(--color-neutral-300)">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-700)">Líneas</div>
+          <div style="font-family:var(--font-heading);font-weight:800;font-size:34px;margin-top:var(--space-2)">{{ totalLineas }}</div>
+        </div>
+        <div style="padding:var(--space-6);border-left:1px solid var(--color-neutral-300)">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-700)">Unidades</div>
+          <div style="font-family:var(--font-heading);font-weight:800;font-size:34px;margin-top:var(--space-2)">{{ totalUnidades }}</div>
+        </div>
+        <div style="padding:var(--space-6);border-left:1px solid var(--color-neutral-300)">
+          <div style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--color-neutral-700)">Costo estimado</div>
+          <div style="font-family:var(--font-heading);font-weight:800;font-size:34px;margin-top:var(--space-2)">{{ totalCosto }}</div>
+        </div>
+      </div>
+      <sc-for list="{{ seleccionados }}" as="s" hint-placeholder-count="3">
+        <div style="display:grid;grid-template-columns:1fr auto auto;gap:var(--space-4);border-bottom:1px solid var(--color-neutral-300);padding:var(--space-3) var(--space-2);font-size:15px">
+          <span>{{ s.nombre }}</span>
+          <span style="color:var(--color-neutral-700)">{{ s.origen }}</span>
+          <span style="font-weight:600;min-width:60px;text-align:right">{{ s.cant }} u</span>
+        </div>
+      </sc-for>
+      <p style="font-size:14px;color:var(--color-neutral-700);max-width:60ch;margin-top:var(--space-6)">Al confirmar, la orden entra a la cola del centro de distribución y queda visible para el gerente de zona. Podrás editarla hasta las 18:00 de hoy.</p>
+    </section>
+    </sc-if>
+
+    <div style="display:flex;gap:var(--space-2);border-top:2px solid var(--color-text);padding-top:var(--space-6)">
+      <button type="button" class="btn btn-secondary" onClick="{{ prev }}">Atrás</button>
+      <div style="flex:1"></div>
+      <button type="button" class="btn btn-primary" onClick="{{ next }}">{{ nextLabel }}</button>
+    </div>
+  </main>
+  </sc-if>
+
+  <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+  <main style="padding:var(--space-8) var(--space-6);max-width:900px">
+    <div style="background:var(--color-accent);color:#fff;padding:var(--space-8)">
+      <div style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;opacity:0.9">Orden RP-2841 enviada</div>
+      <div style="font-family:var(--font-heading);font-weight:800;font-size:40px;line-height:1.05;margin-top:var(--space-4);letter-spacing:-0.02em">{{ totalUnidades }} unidades en camino para mañana AM</div>
+    </div>
+    <div style="display:flex;gap:var(--space-2);margin-top:var(--space-6)">
+      <button type="button" class="btn btn-primary" onClick="{{ goDashboard }}">Volver al turno</button>
+      <button type="button" class="btn btn-secondary" onClick="{{ goWizard }}">Crear otra orden</button>
+    </div>
+  </main>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;tienda&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Tienda 118 · Los Palos Grandes&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;mostrarAlertas&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'dashboard',
+    step: 1,
+    tareas: [
+      { texto: 'Conteo cíclico pasillo 3', hora: '08:00', hecha: true },
+      { texto: 'Arqueo de caja 2', hora: '10:30', hecha: true },
+      { texto: 'Recibir despacho CD Guarenas', hora: '11:00', hecha: false },
+      { texto: 'Firmar devolución de controlados', hora: '14:00', hecha: false },
+      { texto: 'Briefing de cierre con el turno tarde', hora: '14:45', hecha: false }
+    ],
+    sugeridos: [
+      { nombre: 'Acetaminofén 500 mg · 20 tab', meta: 'Cobertura 2 días · vende 41 u/día', sugerido: 'Sugerido 120 u', sel: true, cant: 120, origen: 'CD Guarenas' },
+      { nombre: 'Suero fisiológico 500 ml', meta: 'Cobertura 3 días · vende 12 u/día', sugerido: 'Sugerido 60 u', sel: true, cant: 60, origen: 'CD Guarenas' },
+      { nombre: 'Pañal etapa 3 · 40 und', meta: 'Cobertura 4 días · vende 8 u/día', sugerido: 'Sugerido 40 u', sel: false, cant: 40, origen: 'Tienda 104' },
+      { nombre: 'Protector solar FPS 50', meta: 'Cobertura 5 días · vende 6 u/día', sugerido: 'Sugerido 24 u', sel: true, cant: 24, origen: 'CD Guarenas' }
+    ]
+  };
+
+  go = (screen) => () => this.setState({ screen });
+
+  setSug(i, fn) {
+    this.setState(s => ({ sugeridos: s.sugeridos.map((x, j) => j === i ? fn(x) : x) }));
+  }
+
+  renderVals() {
+    const { screen, step, tareas, sugeridos } = this.state;
+    const acento = 'var(--color-accent-700)';
+    const tabDefs = [
+      { id: 'dashboard', label: 'Turno' },
+      { id: 'detalle', label: 'Producto' },
+      { id: 'wizard', label: 'Reposición' }
+    ];
+    const tabStyle = (active) =>
+      'background:transparent;border:0;border-bottom:' + (active ? '3px solid var(--color-accent)' : '3px solid transparent') +
+      ';padding:12px 0;margin-right:28px;font-family:var(--font-body);font-size:14px;font-weight:' + (active ? '600' : '400') +
+      ';letter-spacing:0.06em;text-transform:uppercase;color:' + (active ? 'var(--color-text)' : 'var(--color-neutral-700)') + ';cursor:pointer';
+
+    const quiebresRaw = [
+      { nombre: 'Acetaminofén 500 mg · 20 tab', meta: 'SKU 4410287 · 38 u en sala', dias: '2 d', alto: true },
+      { nombre: 'Suero fisiológico 500 ml', meta: 'SKU 3320991 · 21 u en sala', dias: '3 d', alto: true },
+      { nombre: 'Pañal etapa 3 · 40 und', meta: 'SKU 7781204 · 14 u en sala', dias: '4 d', alto: false },
+      { nombre: 'Protector solar FPS 50', meta: 'SKU 6650117 · 9 u en sala', dias: '5 d', alto: false },
+      { nombre: 'Insulina glargina 100 UI', meta: 'SKU 9902441 · 6 u en nevera', dias: '5 d', alto: false }
+    ];
+
+    const seleccionados = sugeridos.filter(s => s.sel);
+    const totalUnidades = seleccionados.reduce((a, s) => a + s.cant, 0);
+    const nextLabel = step === 3 ? 'Confirmar y enviar' : 'Continuar';
+
+    return {
+      tienda: this.props.tienda ?? 'Tienda 118 · Los Palos Grandes',
+      mostrarAlertas: this.props.mostrarAlertas ?? true,
+      isDashboard: screen === 'dashboard',
+      isDetalle: screen === 'detalle',
+      isWizard: screen === 'wizard',
+      isDone: screen === 'done',
+      goDashboard: this.go('dashboard'),
+      goWizard: () => this.setState({ screen: 'wizard', step: 1 }),
+      tabs: tabDefs.map(t => ({ label: t.label, go: this.go(t.id), style: tabStyle(screen === t.id || (t.id === 'wizard' && screen === 'done')) })),
+
+      kpis: [
+        { label: 'Venta del día', value: 'Bs 41.280', note: '68% de la meta · 11:42' },
+        { label: 'Ticket promedio', value: 'Bs 214', note: '+6% vs. semana pasada' },
+        { label: 'Quiebres activos', value: '7', note: '2 de alta rotación' },
+        { label: 'Tareas pendientes', value: String(tareas.filter(t => !t.hecha).length), note: '1 vence en 2 horas' }
+      ],
+      quiebres: quiebresRaw.map(q => ({
+        ...q,
+        color: q.alto ? acento : 'var(--color-text)',
+        open: this.go('detalle')
+      })),
+      pendientesTexto: tareas.filter(t => !t.hecha).length + ' de ' + tareas.length,
+      tareas: tareas.map((t, i) => ({
+        ...t,
+        deco: t.hecha ? 'line-through' : 'none',
+        colorTexto: t.hecha ? 'var(--color-neutral-600)' : 'var(--color-text)',
+        toggle: () => this.setState(s => ({ tareas: s.tareas.map((x, j) => j === i ? { ...x, hecha: !x.hecha } : x) }))
+      })),
+
+      detalleKpis: [
+        { label: 'En sala', value: '38 u', note: 'Mínimo de exhibición 40 u', color: acento },
+        { label: 'En depósito', value: '12 u', note: 'Última recepción: 2 sep', color: 'var(--color-text)' },
+        { label: 'Venta diaria', value: '41 u', note: 'Promedio de 7 días', color: 'var(--color-text)' },
+        { label: 'Cobertura', value: '2 días', note: 'Umbral de alerta: 5 días', color: acento }
+      ],
+      barras: [
+        { dia: 'Mar', valor: 38, alto: '62%', color: 'var(--color-neutral-400)' },
+        { dia: 'Mié', valor: 44, alto: '72%', color: 'var(--color-neutral-400)' },
+        { dia: 'Jue', valor: 35, alto: '57%', color: 'var(--color-neutral-400)' },
+        { dia: 'Vie', valor: 52, alto: '85%', color: 'var(--color-neutral-400)' },
+        { dia: 'Sáb', valor: 61, alto: '100%', color: 'var(--color-accent)' },
+        { dia: 'Dom', valor: 29, alto: '48%', color: 'var(--color-neutral-400)' },
+        { dia: 'Lun', valor: 27, alto: '44%', color: 'var(--color-neutral-400)' }
+      ],
+      red: [
+        { lugar: 'CD Guarenas', uds: '1.240', eta: 'Mañana AM' },
+        { lugar: 'Tienda 104 · Chacao', uds: '96', eta: 'Hoy 16:00' },
+        { lugar: 'Tienda 131 · La Castellana', uds: '54', eta: 'Mañana PM' },
+        { lugar: 'Tienda 210 · Santa Fe', uds: '18', eta: 'No disponible' }
+      ],
+
+      pasos: [1, 2, 3].map(n => ({
+        n: String(n),
+        titulo: n === 1 ? 'Productos' : n === 2 ? 'Cantidades y origen' : 'Confirmar',
+        fondo: n === step ? 'var(--color-accent)' : 'transparent',
+        tinta: n === step ? '#ffffff' : n < step ? 'var(--color-text)' : 'var(--color-neutral-600)'
+      })),
+      paso1: step === 1,
+      paso2: step === 2,
+      paso3: step === 3,
+      sugeridos: sugeridos.map((s, i) => ({
+        ...s,
+        toggle: () => this.setSug(i, x => ({ ...x, sel: !x.sel }))
+      })),
+      seleccionados: sugeridos.map((s, i) => ({ ...s, i })).filter(s => s.sel).map(s => ({
+        ...s,
+        menos: () => this.setSug(s.i, x => ({ ...x, cant: Math.max(0, x.cant - 12) })),
+        mas: () => this.setSug(s.i, x => ({ ...x, cant: x.cant + 12 }))
+      })),
+      totalLineas: String(seleccionados.length),
+      totalUnidades: String(totalUnidades),
+      totalCosto: 'Bs ' + (totalUnidades * 38).toLocaleString('es-VE'),
+      nextLabel,
+      next: () => this.setState(s => s.step === 3 ? { screen: 'done' } : { step: s.step + 1 }),
+      prev: () => this.setState(s => s.step === 1 ? { screen: 'dashboard' } : { step: s.step - 1 })
+    };
+  }
+}
+</script>
+</body>
+</html>
